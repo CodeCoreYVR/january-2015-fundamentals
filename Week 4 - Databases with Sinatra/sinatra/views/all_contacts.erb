@@ -1,0 +1,19 @@
+<h1>All Contacts</h1>
+
+<table class="table table-striped">
+  <tr>
+    <th>Full Name</th>
+    <th>Email</th>
+    <th>Message</th>
+  </tr>
+
+  <% @contacts.each do |contact| %>
+    <tr>
+      <td><%= contact.full_name %></td>
+      <td><%= contact.email %></td>
+      <td><%= contact.message %></td>
+    </tr>
+  <% end %>
+
+</table>
+

@@ -33,4 +33,3 @@ post "/contact" do
     })
   params.to_s
 end
-
