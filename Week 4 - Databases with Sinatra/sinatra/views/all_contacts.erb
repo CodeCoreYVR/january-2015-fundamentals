@@ -5,6 +5,7 @@
     <th>Full Name</th>
     <th>Email</th>
     <th>Message</th>
+    <th></th>
   </tr>
 
   <% @contacts.each do |contact| %>
@@ -12,6 +13,7 @@
       <td><%= contact.full_name %></td>
       <td><%= contact.email %></td>
       <td><%= contact.message %></td>
+      <td><a href="/contact/<%= contact.id %>" class="btn btn-primary">Show</a></td>
     </tr>
   <% end %>
 

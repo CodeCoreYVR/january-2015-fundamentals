@@ -3,6 +3,11 @@
 <head>
   <title>Welcome to my app</title>
   <link rel="stylesheet" type="text/css" href="/css/bootstrap.css">
+  <style>
+    body {
+      background-color: <%= session[:bg_color] %>;
+    }
+  </style>
 </head>
 <body>
   <a href="/">Home</a>
@@ -10,6 +15,14 @@
   <a href="/contact">Contact Us</a>
   | 
   <a href="/all_contacts">All Contact</a>
+  |
+  <a href="/color/red">Red</a>
+  <a href="/color/blue">Blue</a>
+  <a href="/color/yellow">Yellow</a>
+  <a href="/color/white">White</a>
+
+
+  <p>You Last Visited: <%= session[:last_visited_contact] %></p>
   <hr>
   <%= yield %>
 </body>

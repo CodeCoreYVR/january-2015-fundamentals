@@ -1,0 +1,13 @@
+<h1>Information about <%= @contact.full_name %></h1>
+
+<p>Email: <%= @contact.email %></p>
+
+<p>Message: <%= @contact.message %></p>
+
+<p>Note: <%= @contact.note %></p>
+
+
+<form action="/note/<%= @contact.id %>" method="post">
+  <textarea name="note"></textarea>  
+  <input type="submit" value="Save Note" class="btn btn-primary">
+</form>

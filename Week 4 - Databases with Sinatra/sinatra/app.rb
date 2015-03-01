@@ -2,6 +2,8 @@ require "sinatra"
 require "pony"
 require "data_mapper"
 
+enable :sessions
+
 DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/sinatra.db")
 
 # data mapper will create a table called contacts
@@ -13,7 +15,21 @@ class Contact
   property :full_name, String
   property :email,     String
   property :message,   Text
+  property :note,      Text
 
+end
+
+helpers do
+  def protected!
+    return if authorized?
+    headers['WWW-Authenticate'] = 'Basic realm="Restricted Area"'
+    halt 401, "Not authorized\n"
+  end
+
+  def authorized?
+    @auth ||=  Rack::Auth::Basic::Request.new(request.env)
+    @auth.provided? and @auth.basic? and @auth.credentials and @auth.credentials == ['admin', 'admin']
+  end
 end
 
 # create the table in the database if it doesn't exist
@@ -31,6 +47,7 @@ get "/about" do
 end
 
 get "/all_contacts" do
+  protected!
   @contacts = Contact.all
   erb :all_contacts, layout: :default
 end
@@ -39,6 +56,33 @@ get "/contact" do
   erb :contact, layout: :default
 end
 
+# This will match any url that has something after the /
+# for example: /contact/1 or /contact/abc
+get "/contact/:id" do |id|
+  protected!
+  # this will issue a query like:
+  # SELECT * FROM contacts WHERE id=4;
+  @contact = Contact.get id
+
+  session[:last_visited_contact] = @contact.full_name
+
+  # this renders the signle_contact.erb
+  # within the "default" layout
+  erb :single_contact, layout: :default
+end
+
+post "/note/:id" do |id|
+  protected!
+  contact      = Contact.get id
+  contact.note = params[:note]
+  contact.save
+  redirect to("/contact/#{contact.id}")
+end
+
+get "/color/:color" do |color|
+  session[:bg_color] = color
+  redirect back
+end
 
 post "/contact" do
   Contact.create(full_name: params[:full_name],
